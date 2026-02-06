@@ -584,12 +584,7 @@
                 </div>
                 <div class="video-wrapper">
                     <div class="video-container">
-                        <iframe 
-                            src="https://www.youtube-nocookie.com/embed/Fcc9Uw3elgs?start=8&end=52&rel=0&modestbranding=1&enablejsapi=1" 
-                            title="Sevillanas"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                        </iframe>
+                        <div id="video-es"></div>
                     </div>
                 </div>
             </div>
@@ -616,12 +611,7 @@
                 </div>
                 <div class="video-wrapper">
                     <div class="video-container">
-                        <iframe 
-                            src="https://www.youtube-nocookie.com/embed/cyhsg--fHWU?rel=0&modestbranding=1&enablejsapi=1" 
-                            title="Stew Folk Dance Irlandés"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                        </iframe>
+                        <div id="video-ie"></div>
                     </div>
                 </div>
             </div>
@@ -648,12 +638,7 @@
                 </div>
                 <div class="video-wrapper">
                     <div class="video-container">
-                        <iframe 
-                            src="https://www.youtube-nocookie.com/embed/L5zAuifvbKA?rel=0&modestbranding=1&enablejsapi=1" 
-                            title="Danza Masai"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                        </iframe>
+                        <div id="video-ke"></div>
                     </div>
                 </div>
             </div>
@@ -681,12 +666,7 @@
                 </div>
                 <div class="video-wrapper">
                     <div class="video-container">
-                        <iframe 
-                            src="https://www.youtube-nocookie.com/embed/ofliFqi5oNc?start=231&end=322&rel=0&modestbranding=1&enablejsapi=1" 
-                            title="Danza Folclórica Coreana"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                        </iframe>
+                        <div id="video-kr"></div>
                     </div>
                 </div>
             </div>
@@ -713,12 +693,7 @@
                 </div>
                 <div class="video-wrapper">
                     <div class="video-container">
-                        <iframe 
-                            src="https://www.youtube-nocookie.com/embed/9gLNvK0Tk5o?start=20&end=82&rel=0&modestbranding=1&enablejsapi=1" 
-                            title="Hula"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                        </iframe>
+                        <div id="video-us"></div>
                     </div>
                 </div>
             </div>
@@ -745,12 +720,7 @@
                 </div>
                 <div class="video-wrapper">
                     <div class="video-container">
-                        <iframe 
-                            src="https://www.youtube-nocookie.com/embed/qs7Py7Pl1JY?rel=0&modestbranding=1&enablejsapi=1" 
-                            title="Haka"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                        </iframe>
+                        <div id="video-nz"></div>
                     </div>
                 </div>
             </div>
@@ -777,12 +747,7 @@
                 </div>
                 <div class="video-wrapper">
                     <div class="video-container">
-                        <iframe 
-                            src="https://www.youtube-nocookie.com/embed/Bq-6gXrZ84s?start=29&end=56&rel=0&modestbranding=1&enablejsapi=1" 
-                            title="Capoeira"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                        </iframe>
+                        <div id="video-br"></div>
                     </div>
                 </div>
             </div>
@@ -809,12 +774,7 @@
                 </div>
                 <div class="video-wrapper">
                     <div class="video-container">
-                        <iframe 
-                            src="https://www.youtube-nocookie.com/embed/-x0vKSO29N4?start=0&end=60&rel=0&modestbranding=1&enablejsapi=1" 
-                            title="Jarabe Tapatio"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                        </iframe>
+                        <div id="video-mx"></div>
                     </div>
                 </div>
             </div>
@@ -841,12 +801,7 @@
                 </div>
                 <div class="video-wrapper">
                     <div class="video-container">
-                        <iframe 
-                            src="https://www.youtube-nocookie.com/embed/M3munTEqO24?start=0&end=70&rel=0&modestbranding=1&enablejsapi=1" 
-                            title="Tari Legong"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                        </iframe>
+                        <div id="video-id"></div>
                     </div>
                 </div>
             </div>
@@ -872,12 +827,80 @@
         </div>
     </div>
 
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdn.jsdelivr.net/npm/svgmap@v2.19.2/dist/svg-map.umd.min.js"></script>
     <script>
         let currentSlide = 1;
         const totalSlides = 10;
         const maps = {};
         let modalMap = null;
+        let youtubePlayers = {};
+        let currentPlayer = null;
+
+        // Video configurations with start and end times (in seconds)
+        const videoConfigs = {
+            'video-es': { videoId: 'Fcc9Uw3elgs', start: 8, end: 52, country: 'España' },
+            'video-ie': { videoId: 'cyhsg--fHWU', start: 0, end: null, country: 'Irlanda' },
+            'video-ke': { videoId: 'L5zAuifvbKA', start: 0, end: null, country: 'Kenia' },
+            'video-kr': { videoId: 'ofliFqi5oNc', start: 231, end: 322, country: 'Corea del Sur' },
+            'video-us': { videoId: '9gLNvK0Tk5o', start: 20, end: 82, country: 'Hawái' },
+            'video-nz': { videoId: 'qs7Py7Pl1JY', start: 0, end: null, country: 'Nueva Zelanda' },
+            'video-br': { videoId: 'Bq-6gXrZ84s', start: 29, end: 56, country: 'Brasil' },
+            'video-mx': { videoId: '-x0vKSO29N4', start: 0, end: 60, country: 'México' },
+            'video-id': { videoId: 'M3munTEqO24', start: 0, end: 70, country: 'Indonesia' }
+        };
+
+        // Called automatically by YouTube API when ready
+        function onYouTubeIframeAPIReady() {
+            // Initialize all video players
+            Object.keys(videoConfigs).forEach(playerId => {
+                const config = videoConfigs[playerId];
+                youtubePlayers[playerId] = new YT.Player(playerId, {
+                    videoId: config.videoId,
+                    playerVars: {
+                        start: config.start,
+                        rel: 0,
+                        modestbranding: 1,
+                        enablejsapi: 1,
+                        playsinline: 1
+                    },
+                    events: {
+                        onReady: onPlayerReady,
+                        onStateChange: onPlayerStateChange
+                    }
+                });
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Player is ready
+        }
+
+        function onPlayerStateChange(event) {
+            // If video is playing, check for end time
+            if (event.data === YT.PlayerState.PLAYING) {
+                const playerId = event.target.getIframe().id;
+                const config = videoConfigs[playerId];
+                
+                if (config && config.end) {
+                    checkVideoEnd(event.target, config.end);
+                }
+            }
+        }
+
+        function checkVideoEnd(player, endTime) {
+            const interval = setInterval(() => {
+                if (player.getCurrentTime() >= endTime) {
+                    player.pauseVideo();
+                    clearInterval(interval);
+                }
+                // Stop checking if video is paused or ended
+                if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                    clearInterval(interval);
+                }
+            }, 100); // Check every 100ms
+        }
 
         // Country configurations
         const countryConfigs = {
@@ -963,16 +986,10 @@
             const modalTitle = document.getElementById('modalTitle');
             const modalMapContainer = document.getElementById('modalMap');
             
-            // Clear previous map
             modalMapContainer.innerHTML = '';
-            
-            // Set title
             modalTitle.textContent = `Mapa de ${countryName}`;
-            
-            // Show modal
             modal.classList.add('active');
             
-            // Create new map in modal
             setTimeout(() => {
                 modalMap = createMap('modalMap', [countryCode], color);
             }, 100);
@@ -981,21 +998,17 @@
         function closeMapModal() {
             const modal = document.getElementById('mapModal');
             modal.classList.remove('active');
-            
-            // Clear modal map to free memory
             if (modalMap) {
                 modalMap = null;
             }
         }
 
-        // Close modal on escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeMapModal();
             }
         });
 
-        // Close modal on backdrop click
         document.getElementById('mapModal').addEventListener('click', (e) => {
             if (e.target.id === 'mapModal') {
                 closeMapModal();
@@ -1007,6 +1020,11 @@
             
             if (n > totalSlides) currentSlide = totalSlides;
             if (n < 1) currentSlide = 1;
+            
+            // Pause current video when changing slides
+            if (currentPlayer) {
+                currentPlayer.pauseVideo();
+            }
             
             slides.forEach(slide => slide.classList.remove('active'));
             document.querySelector(`.slide-content[data-slide="${currentSlide}"]`).classList.add('active');
@@ -1021,7 +1039,6 @@
             
             document.querySelector('.slide-content.active').scrollTop = 0;
 
-            // Initialize map if needed
             if (currentSlide > 1) {
                 setTimeout(() => initMap(currentSlide), 100);
             }
