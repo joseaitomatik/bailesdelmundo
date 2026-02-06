@@ -4,6 +4,7 @@ let currentSlide = 1;
 const totalSlides = 10;
 const maps = {};
 let modalMap = null;
+let worldMap = null;
 let youtubePlayers = {};
 let currentPlayer = null;
 
@@ -12,12 +13,25 @@ const videoConfigs = {
     'video-es': { videoId: 'Fcc9Uw3elgs', start: 8, end: 52, country: 'España' },
     'video-ie': { videoId: 'cyhsg--fHWU', start: 0, end: null, country: 'Irlanda' },
     'video-ke': { videoId: 'L5zAuifvbKA', start: 0, end: null, country: 'Kenia' },
-    'video-kr': { videoId: 'ofliFqi5oNc', start: 231, end: 322, country: 'Corea del Sur' },
     'video-us': { videoId: '9gLNvK0Tk5o', start: 20, end: 82, country: 'Hawái' },
     'video-nz': { videoId: 'KFx66XutcX4', start: 20, end: null, country: 'Nueva Zelanda' },
     'video-br': { videoId: 'Bq-6gXrZ84s', start: 29, end: 56, country: 'Brasil' },
     'video-mx': { videoId: '-x0vKSO29N4', start: 0, end: 60, country: 'México' },
-    'video-id': { videoId: 'M3munTEqO24', start: 0, end: 70, country: 'Indonesia' }
+    'video-id': { videoId: 'M3munTEqO24', start: 0, end: 70, country: 'Indonesia' },
+    'video-kr': { videoId: 'ofliFqi5oNc', start: 231, end: 322, country: 'Corea del Sur' }
+};
+
+// Country to slide mapping for world map
+const countrySlideMap = {
+    'ES': 2,  // España
+    'IE': 3,  // Irlanda
+    'KE': 4,  // Kenia
+    'US': 5,  // Hawái
+    'NZ': 6,  // Nueva Zelanda
+    'BR': 7,  // Brasil
+    'MX': 8,  // México
+    'ID': 9,  // Indonesia
+    'KR': 10  // Corea del Sur
 };
 
 // Called automatically by YouTube API when ready
@@ -84,13 +98,13 @@ const countryConfigs = {
     'ID': { name: 'Indonesia', color: '#DC143C' }
 };
 
-function createMap(elementId, countryCodes, highlightColor) {
+function createMap(elementId, countryCodes, highlightColor, isClickable = false) {
     const countryData = {};
     countryCodes.forEach(code => {
         countryData[code] = { color: highlightColor };
     });
 
-    return new svgMap({
+    const config = {
         targetElementID: elementId,
         colorMax: highlightColor,
         colorMin: '#e2e2e2',
@@ -128,7 +142,26 @@ function createMap(elementId, countryCodes, highlightColor) {
             const bgColor = isHighlighted ? highlightColor : '#666';
             return `<div style="background: ${bgColor}; color: white; padding: 8px 12px; border-radius: 6px; font-weight: 600;">${countryName}</div>`;
         }
-    });
+    };
+
+    // Add click handler for world map
+    if (isClickable) {
+        config.onClick = function(countryID) {
+            if (countrySlideMap[countryID]) {
+                currentSlide = countrySlideMap[countryID];
+                showSlide(currentSlide);
+            }
+        };
+    }
+
+    return new svgMap(config);
+}
+
+function initWorldMap() {
+    if (!worldMap) {
+        const allCountries = Object.keys(countrySlideMap);
+        worldMap = createMap('world-map', allCountries, '#667eea', true);
+    }
 }
 
 function initMap(slideNum) {
@@ -136,12 +169,12 @@ function initMap(slideNum) {
         2: { id: 'map-es', countries: ['ES'], color: '#B22222' },
         3: { id: 'map-ie', countries: ['IE'], color: '#169B62' },
         4: { id: 'map-ke', countries: ['KE'], color: '#DC143C' },
-        5: { id: 'map-kr', countries: ['KR'], color: '#C60C30' },
-        6: { id: 'map-us', countries: ['US'], color: '#006994' },
-        7: { id: 'map-nz', countries: ['NZ'], color: '#000080' },
-        8: { id: 'map-br', countries: ['BR'], color: '#009c3b' },
-        9: { id: 'map-mx', countries: ['MX'], color: '#006847' },
-        10: { id: 'map-id', countries: ['ID'], color: '#DC143C' }
+        5: { id: 'map-us', countries: ['US'], color: '#006994' },
+        6: { id: 'map-nz', countries: ['NZ'], color: '#000080' },
+        7: { id: 'map-br', countries: ['BR'], color: '#009c3b' },
+        8: { id: 'map-mx', countries: ['MX'], color: '#006847' },
+        9: { id: 'map-id', countries: ['ID'], color: '#DC143C' },
+        10: { id: 'map-kr', countries: ['KR'], color: '#C60C30' }
     };
 
     const config = mapConfigs[slideNum];
@@ -196,7 +229,10 @@ function showSlide(n) {
     
     document.querySelector('.slide-content.active').scrollTop = 0;
 
-    if (currentSlide > 1) {
+    // Initialize maps
+    if (currentSlide === 1) {
+        setTimeout(() => initWorldMap(), 100);
+    } else if (currentSlide > 1) {
         setTimeout(() => initMap(currentSlide), 100);
     }
 }
