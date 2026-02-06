@@ -173,11 +173,7 @@ function initMap(slideNum) {
         5: { 
             id: 'map-us', 
             countries: ['US'], 
-            color: '#006994',
-            zoomOptions: { 
-                initialZoom: 12, 
-                initialPan: { x: -200, y: 200 } 
-            }
+            color: '#006994'
         },
         6: { id: 'map-nz', countries: ['NZ'], color: '#000080' },
         7: { id: 'map-br', countries: ['BR'], color: '#009c3b' },
