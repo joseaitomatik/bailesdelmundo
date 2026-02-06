@@ -14,7 +14,7 @@ const videoConfigs = {
     'video-ke': { videoId: 'L5zAuifvbKA', start: 0, end: null, country: 'Kenia' },
     'video-kr': { videoId: 'ofliFqi5oNc', start: 231, end: 322, country: 'Corea del Sur' },
     'video-us': { videoId: '9gLNvK0Tk5o', start: 20, end: 82, country: 'Hawái' },
-    'video-nz': { videoId: 'qs7Py7Pl1JY', start: 0, end: null, country: 'Nueva Zelanda' },
+    'video-nz': { videoId: 'KFx66XutcX4', start: 20, end: null, country: 'Nueva Zelanda' },
     'video-br': { videoId: 'Bq-6gXrZ84s', start: 29, end: 56, country: 'Brasil' },
     'video-mx': { videoId: '-x0vKSO29N4', start: 0, end: 60, country: 'México' },
     'video-id': { videoId: 'M3munTEqO24', start: 0, end: 70, country: 'Indonesia' }
