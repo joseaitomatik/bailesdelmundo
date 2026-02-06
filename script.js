@@ -98,7 +98,7 @@ const countryConfigs = {
     'ID': { name: 'Indonesia', color: '#DC143C' }
 };
 
-function createMap(elementId, countryCodes, highlightColor, isClickable = false) {
+function createMap(elementId, countryCodes, highlightColor, isClickable = false, zoomOptions = {}) {
     const countryData = {};
     countryCodes.forEach(code => {
         countryData[code] = { color: highlightColor };
@@ -109,9 +109,10 @@ function createMap(elementId, countryCodes, highlightColor, isClickable = false)
         colorMax: highlightColor,
         colorMin: '#e2e2e2',
         colorNoData: '#e2e2e2',
-        initialZoom: 1.2,
+        initialZoom: zoomOptions.initialZoom || 1.2,
+        initialPan: zoomOptions.initialPan || { x: 0, y: 0 },
         minZoom: 1,
-        maxZoom: 10,
+        maxZoom: 25,
         mouseWheelZoomEnabled: true,
         mouseWheelZoomWithKey: false,
         hideFlag: true,
@@ -130,7 +131,7 @@ function createMap(elementId, countryCodes, highlightColor, isClickable = false)
             'IE': 'Irlanda',
             'KE': 'Kenia',
             'KR': 'Corea del Sur',
-            'US': 'Estados Unidos',
+            'US': 'Hawái',
             'NZ': 'Nueva Zelanda',
             'BR': 'Brasil',
             'MX': 'México',
@@ -169,7 +170,15 @@ function initMap(slideNum) {
         2: { id: 'map-es', countries: ['ES'], color: '#B22222' },
         3: { id: 'map-ie', countries: ['IE'], color: '#169B62' },
         4: { id: 'map-ke', countries: ['KE'], color: '#DC143C' },
-        5: { id: 'map-us', countries: ['US'], color: '#006994' },
+        5: { 
+            id: 'map-us', 
+            countries: ['US'], 
+            color: '#006994',
+            zoomOptions: { 
+                initialZoom: 8, 
+                initialPan: { x: 550, y: 160 } 
+            }
+        },
         6: { id: 'map-nz', countries: ['NZ'], color: '#000080' },
         7: { id: 'map-br', countries: ['BR'], color: '#009c3b' },
         8: { id: 'map-mx', countries: ['MX'], color: '#006847' },
@@ -179,7 +188,13 @@ function initMap(slideNum) {
 
     const config = mapConfigs[slideNum];
     if (config && !maps[slideNum]) {
-        maps[slideNum] = createMap(config.id, config.countries, config.color);
+        maps[slideNum] = createMap(
+            config.id, 
+            config.countries, 
+            config.color, 
+            false,
+            config.zoomOptions || {}
+        );
     }
 }
 
