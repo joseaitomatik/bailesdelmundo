@@ -232,25 +232,6 @@ function showSlide(n) {
     } else if (currentSlide > 1) {
         setTimeout(() => initMap(currentSlide), 100);
     }
-    
-    // Auto-play video for current slide
-    if (currentSlide > 1) {
-        const slideVideoIds = {
-            2: 'video-es',
-            3: 'video-ie',
-            4: 'video-ke',
-            5: 'video-us',
-            6: 'video-nz',
-            7: 'video-br',
-            8: 'video-mx',
-            9: 'video-id',
-            10: 'video-kr'
-        };
-        const videoId = slideVideoIds[currentSlide];
-        if (videoId) {
-            setTimeout(() => playVideo(videoId), 300);
-        }
-    }
 }
 
 function nextSlide() {
