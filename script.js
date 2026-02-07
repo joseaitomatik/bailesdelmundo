@@ -1,25 +1,26 @@
-// Bailes del Mundo - JavaScript
+// Bailes del Mundo - JavaScript con videos locales
 
 let currentSlide = 1;
 const totalSlides = 10;
 const maps = {};
 let modalMap = null;
 let worldMap = null;
-let youtubePlayers = {};
-let currentPlayer = null;
 
-// Video configurations with start and end times (in seconds)
+// Video configurations - mapeo de ID a archivo de video
 const videoConfigs = {
-    'video-es': { videoId: 'Fcc9Uw3elgs', start: 8, end: 52, country: 'España' },
-    'video-ie': { videoId: 'cyhsg--fHWU', start: 0, end: 53, country: 'Irlanda' },
-    'video-ke': { videoId: 'L5zAuifvbKA', start: 0, end: null, country: 'Kenia' },
-    'video-us': { videoId: '9gLNvK0Tk5o', start: 20, end: 82, country: 'Hawái' },
-    'video-nz': { videoId: 'KFx66XutcX4', start: 20, end: null, country: 'Nueva Zelanda' },
-    'video-br': { videoId: 'Bq-6gXrZ84s', start: 29, end: 56, country: 'Brasil' },
-    'video-mx': { videoId: '-x0vKSO29N4', start: 0, end: 60, country: 'México' },
-    'video-id': { videoId: 'M3munTEqO24', start: 0, end: 70, country: 'Indonesia' },
-    'video-kr': { videoId: 'ofliFqi5oNc', start: 231, end: 322, country: 'Corea del Sur' }
+    'video-es': { file: 'espana-sevillanas.mp4', country: 'España' },
+    'video-ie': { file: 'irlanda-stew.mp4', country: 'Irlanda' },
+    'video-ke': { file: 'kenia-salto-masai.mp4', country: 'Kenia' },
+    'video-us': { file: 'hawaii-hula.mp4', country: 'Hawái' },
+    'video-nz': { file: 'nueva-zelanda-haka.mp4', country: 'Nueva Zelanda' },
+    'video-br': { file: 'brasil-capoeira.mp4', country: 'Brasil' },
+    'video-mx': { file: 'mexico-jarabe.mp4', country: 'México' },
+    'video-id': { file: 'indonesia-tari-legong.mp4', country: 'Indonesia' },
+    'video-kr': { file: 'corea-danza-folclorica.mp4', country: 'Corea del Sur' }
 };
+
+// Referencias a los elementos de video
+const videoPlayers = {};
 
 // Country to slide mapping for world map
 const countrySlideMap = {
@@ -34,55 +35,42 @@ const countrySlideMap = {
     'KR': 10  // Corea del Sur
 };
 
-// Called automatically by YouTube API when ready
-function onYouTubeIframeAPIReady() {
-    // Initialize all video players
-    Object.keys(videoConfigs).forEach(playerId => {
-        const config = videoConfigs[playerId];
-        youtubePlayers[playerId] = new YT.Player(playerId, {
-            videoId: config.videoId,
-            playerVars: {
-                start: config.start,
-                rel: 0,
-                modestbranding: 1,
-                enablejsapi: 1,
-                playsinline: 1
-            },
-            events: {
-                onReady: onPlayerReady,
-                onStateChange: onPlayerStateChange
-            }
-        });
+// Initialize video players
+function initVideos() {
+    Object.keys(videoConfigs).forEach(videoId => {
+        const videoElement = document.getElementById(videoId);
+        if (videoElement) {
+            videoPlayers[videoId] = videoElement;
+            
+            // Configurar para que se reproduzca automáticamente cuando esté listo
+            videoElement.addEventListener('loadedmetadata', () => {
+                console.log(`Video ${videoId} loaded successfully`);
+            });
+            
+            // Manejar errores
+            videoElement.addEventListener('error', (e) => {
+                console.error(`Error loading video ${videoId}:`, e);
+            });
+        }
     });
 }
 
-function onPlayerReady(event) {
-    // Player is ready
+function pauseAllVideos() {
+    Object.values(videoPlayers).forEach(video => {
+        if (video && !video.paused) {
+            video.pause();
+        }
+    });
 }
 
-function onPlayerStateChange(event) {
-    // If video is playing, check for end time
-    if (event.data === YT.PlayerState.PLAYING) {
-        const playerId = event.target.getIframe().id;
-        const config = videoConfigs[playerId];
-        
-        if (config && config.end) {
-            checkVideoEnd(event.target, config.end);
-        }
+function playVideo(videoId) {
+    const video = videoPlayers[videoId];
+    if (video) {
+        video.currentTime = 0;
+        video.play().catch(e => {
+            console.log('Autoplay prevented, user interaction needed');
+        });
     }
-}
-
-function checkVideoEnd(player, endTime) {
-    const interval = setInterval(() => {
-        if (player.getCurrentTime() >= endTime) {
-            player.pauseVideo();
-            clearInterval(interval);
-        }
-        // Stop checking if video is paused or ended
-        if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
-            clearInterval(interval);
-        }
-    }, 100); // Check every 100ms
 }
 
 // Country configurations
@@ -222,10 +210,8 @@ function showSlide(n) {
     if (n > totalSlides) currentSlide = totalSlides;
     if (n < 1) currentSlide = 1;
     
-    // Pause current video when changing slides
-    if (currentPlayer) {
-        currentPlayer.pauseVideo();
-    }
+    // Pause all videos when changing slides
+    pauseAllVideos();
     
     slides.forEach(slide => slide.classList.remove('active'));
     document.querySelector(`.slide-content[data-slide="${currentSlide}"]`).classList.add('active');
@@ -245,6 +231,25 @@ function showSlide(n) {
         setTimeout(() => initWorldMap(), 100);
     } else if (currentSlide > 1) {
         setTimeout(() => initMap(currentSlide), 100);
+    }
+    
+    // Auto-play video for current slide
+    if (currentSlide > 1) {
+        const slideVideoIds = {
+            2: 'video-es',
+            3: 'video-ie',
+            4: 'video-ke',
+            5: 'video-us',
+            6: 'video-nz',
+            7: 'video-br',
+            8: 'video-mx',
+            9: 'video-id',
+            10: 'video-kr'
+        };
+        const videoId = slideVideoIds[currentSlide];
+        if (videoId) {
+            setTimeout(() => playVideo(videoId), 300);
+        }
     }
 }
 
@@ -304,4 +309,7 @@ function handleSwipe() {
 }
 
 // Initialize on page load
-showSlide(currentSlide);
+document.addEventListener('DOMContentLoaded', () => {
+    initVideos();
+    showSlide(currentSlide);
+});

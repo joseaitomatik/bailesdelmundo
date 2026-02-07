@@ -131,13 +131,15 @@ h3 {
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
-.video-container iframe {
+.video-container iframe,
+.video-container video.local-video {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     border: none;
+    object-fit: cover;
 }
 
 .expand-map-btn {
