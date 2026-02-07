@@ -11,7 +11,7 @@ let currentPlayer = null;
 // Video configurations with start and end times (in seconds)
 const videoConfigs = {
     'video-es': { videoId: 'Fcc9Uw3elgs', start: 8, end: 52, country: 'España' },
-    'video-ie': { videoId: 'cyhsg--fHWU', start: 0, end: null, country: 'Irlanda' },
+    'video-ie': { videoId: 'cyhsg--fHWU', start: 0, end: 53, country: 'Irlanda' },
     'video-ke': { videoId: 'L5zAuifvbKA', start: 0, end: null, country: 'Kenia' },
     'video-us': { videoId: '9gLNvK0Tk5o', start: 20, end: 82, country: 'Hawái' },
     'video-nz': { videoId: 'KFx66XutcX4', start: 20, end: null, country: 'Nueva Zelanda' },
